@@ -170,6 +170,13 @@
         <div class="pill" title="SessionStorage demo">
           Last viewed index: <span id="lastIdx">–</span>
         </div>
+
+        <div class="controls">
+      <button id="newQuoteBtn">Show New Quote</button>
+      <button id="exportBtn">Export Quotes</button>
+      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+      <button id="clearBtn">Reset Quotes</button>
+    </div>
       </header>
 
       <section class="card quote-card" aria-live="polite" aria-atomic="true">
