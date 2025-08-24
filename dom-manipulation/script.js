@@ -142,3 +142,43 @@ document.getElementById("newQuoteBtn")
 
 // ===== Show one quote on page load =====
 showRandomQuote();
+
+
+// ===== Quotes Array =====
+const quotes = [
+  { text: "The only limit to our realization of tomorrow is our doubts of today.", category: "Motivation" },
+  { text: "In the middle of difficulty lies opportunity.", category: "Wisdom" },
+  { text: "Do what you can, with what you have, where you are.", category: "Inspiration" }
+];
+
+// ===== Show Random Quote =====
+function showRandomQuote() {
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[randomIndex];
+
+  // Update DOM using innerHTML
+  document.getElementById("quoteText").innerHTML = quote.text;
+  document.getElementById("quoteCategory").innerHTML = `Category: ${quote.category}`;
+}
+
+// ===== Add New Quote =====
+function addQuote(text, category) {
+  if (!text.trim()) {
+    alert("Quote text cannot be empty");
+    return;
+  }
+
+  // Add new quote object to array
+  quotes.push({ text: text.trim(), category: category.trim() || "General" });
+
+  // Update DOM to show the newly added quote
+  showRandomQuote();
+}
+
+// ===== Event Listener for "Show New Quote" Button =====
+document.getElementById("newQuoteBtn")
+  .addEventListener("click", showRandomQuote);
+
+// ===== Initialize App: Show a quote on page load =====
+showRandomQuote();
+
