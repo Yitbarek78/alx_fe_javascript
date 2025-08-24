@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      header h1 {
+        font-size: clamp(20px, 3.2vw, 32px);
+        margin: 0;
+        letter-spacing: 0.4px;
+      }
+      header .sub {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px 18px 20px;
+      }
+
+      .quote-card {
+        display: grid;
+        gap: 8px;
+        padding: 22px;
+      }
+      blockquote {
+        margin: 0;
+        font-size: clamp(18px, 2.4vw, 24px);
+        line-height: 1.5;
+      }
+      .author {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      button,
+      .file-label {
+        background: #0b1220;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: transform 0.04s ease, border-color 0.2s ease,
+          background 0.2s ease;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+      button:hover,
+      .file-label:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      button:active,
+      .file-label:active {
+        transform: translateY(1px);
+      }
+      .primary {
+        background: linear-gradient(
+          180deg,
+          rgba(34, 197, 94, 0.15),
+          rgba(34, 197, 94, 0.08)
+        );
+        border-color: rgba(34, 197, 94, 0.45);
+      }
+      .secondary {
+        background: linear-gradient(
+          180deg,
+          rgba(96, 165, 250, 0.15),
+          rgba(96, 165, 250, 0.08)
+        );
+        border-color: rgba(96, 165, 250, 0.45);
+      }
+      .danger {
+        background: linear-gradient(
+          180deg,
+          rgba(239, 68, 68, 0.15),
+          rgba(239, 68, 68, 0.08)
+        );
+        border-color: rgba(239, 68, 68, 0.45);
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 860px) {
+        .grid {
+          grid-template-columns: 1.2fr 0.8fr;
+        }
+      }
+
+      .form {
+        display: grid;
+        gap: 10px;
+      }
+      .form label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .form input,
+      .form textarea {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: #0b1220;
+        color: var(--text);
+        border-radius: 12px;
+        padding: 10px 12px;
+        outline: none;
+        resize: vertical;
+      }
+      .help {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .file {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      input[type="file"] {
+        display: none;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+        font-size: 12px;
+        background: #0b1220;
+      }
+      .kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app" aria-labelledby="title">
+      <header>
+        <div>
+          <h1 id="title">Dynamic Quote Generator</h1>
+          <div class="sub">
+            LocalStorage + SessionStorage + JSON Import/Export
+          </div>
+        </div>
+        <div class="pill" title="SessionStorage demo">
+          Last viewed index: <span id="lastIdx">–</span>
+        </div>
+      </header>
+
+      <section class="card quote-card" aria-live="polite" aria-atomic="true">
+        <blockquote id="quoteText">Loading…</blockquote>
+        <div id="quoteAuthor" class="author"></div>
+        <div class="row" style="margin-top: 6px">
+          <button id="btnRandom" class="primary" title="Show a random quote">
+            New Random Quote
+          </button>
+          <button id="btnPrev" title="Show previous">◀︎ Prev</button>
+          <button id="btnNext" title="Show next">Next ▶︎</button>
+          <button
+            id="btnCopy"
+            class="secondary"
+            title="Copy quote to clipboard"
+          >
+            Copy
+          </button>
+        </div>
+      </section>
+
+      <section class="grid">
+        <section class="card form" aria-labelledby="add-title">
+          <h2 id="add-title" style="margin: 0; font-size: 18px">Add a Quote</h2>
+          <label for="newQuoteText">Quote</label>
+          <textarea
+            id="newQuoteText"
+            rows="3"
+            placeholder="e.g., The only limit to our realization of tomorrow is our doubts of today."
+          ></textarea>
+          <label for="newQuoteAuthor">Author (optional)</label>
+          <input
+            id="newQuoteAuthor"
+            type="text"
+            placeholder="e.g., Franklin D. Roosevelt"
+          />
+          <div class="row">
+            <button id="btnAdd" class="primary">Add Quote</button>
+            <span class="help"
+              >Quotes are automatically saved to
+              <span class="kbd">localStorage</span>.</span
+            >
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="io-title">
+          <h2 id="io-title" style="margin: 0; font-size: 18px">
+            Import / Export
+          </h2>
+          <p class="help">
+            Export your quotes to JSON or import from a JSON file. Accepts
+            either an array of objects (<span class="kbd">{ text, author }</span
+            >) or an array of strings (treated as
+            <span class="kbd">text</span> with author "Unknown").
+          </p>
+          <div class="file">
+            <button id="btnExport" class="secondary">Export to JSON</button>
+            <label class="file-label" for="importFile">Import from JSON</label>
+            <!-- Per instructions: keep this exact signature -->
+            <input
+              type="file"
+              id="importFile"
+              accept=".json"
+              onchange="importFromJsonFile(event)"
+            />
+          </div>
+          <div class="row" style="margin-top: 12px">
+            <button
+              id="btnClearAll"
+              class="danger"
+              title="Remove all saved quotes from localStorage"
+            >
+              Clear All (Reset to defaults)
+            </button>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
